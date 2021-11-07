@@ -11,6 +11,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { LinksModule } from './links/links.module';
 import { Link } from './links/entities/links.entity';
 import { MonitorsModule } from './monitors/monitors.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MonitorsModule } from './monitors/monitors.module';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      installSubscriptionHandlers: true,
       // introspection: true,
       context: ({ req, connection }) => {
         const TOKEN_KEY = 'x-jwt';
@@ -55,6 +57,7 @@ import { MonitorsModule } from './monitors/monitors.module';
     UsersModule,
     LinksModule,
     MonitorsModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

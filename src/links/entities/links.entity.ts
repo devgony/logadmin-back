@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity, Unique } from 'typeorm';
 
@@ -15,9 +15,9 @@ export class Link extends CoreEntity {
   @Column({ nullable: false })
   host: string;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => Int, { nullable: false })
   @Column({ nullable: false })
-  port: string;
+  port: number;
 
   @Field(() => String, { nullable: false })
   @Column({ nullable: false })

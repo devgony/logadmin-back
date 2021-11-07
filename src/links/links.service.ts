@@ -69,6 +69,20 @@ export class LinksService {
         return { ok: false, error: 'Connection does not exist' };
       }
       // do sth
+      const connection = await createConnection({
+        type: 'postgres',
+        name,
+        host,
+        port,
+        username,
+        password,
+        database,
+      });
+      if (!connection.isConnected) {
+        return { ok: false, error: 'Connection failed' };
+      }
+      console.log(connection.isConnected);
+      console.log(await connection.query(`select 1`));
       // await this.getPool({ host, port, database, username, password });
       return { ok: true };
     } catch (error) {
