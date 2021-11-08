@@ -12,7 +12,7 @@ import {
   MonitorSessionsInput,
   MonitorSessionsOuput,
 } from './dtos/monitor-sessions.dto';
-import { MonitorPerfInput, MonitorPerfOuput } from './dtos/monitor-test.dto';
+import { MonitorPerfInput, MonitorPerfOuput } from './dtos/monitor-perf.dto';
 import { MonitorsService } from './monitors.service';
 
 @Resolver()

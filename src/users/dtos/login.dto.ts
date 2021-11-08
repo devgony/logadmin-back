@@ -3,7 +3,7 @@ import { ResultOutput } from 'src/common/dtos/result.dto';
 import { User } from '../entities/users.entity';
 
 @InputType()
-export class LoginInput extends PickType(User, ['user_id', 'password']) {}
+export class LoginInput extends PickType(User, ['username', 'password']) {}
 
 @ObjectType()
 export class LoginOutput extends ResultOutput {

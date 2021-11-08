@@ -11,7 +11,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 export class User extends CoreEntity {
   @Field(() => String, { nullable: false })
   @Column({ unique: true, nullable: false })
-  user_id: string;
+  username: string;
 
   @Field(() => String, { nullable: false })
   @Column({ nullable: false })

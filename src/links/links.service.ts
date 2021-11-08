@@ -43,7 +43,7 @@ export class LinksService {
           error: 'The name already exists',
         };
       }
-      const Link = await this.links.save(
+      const link = await this.links.save(
         this.links.create({
           name,
           host,
@@ -63,8 +63,8 @@ export class LinksService {
 
   async findLinks(): Promise<FindLinksOutput> {
     try {
-      const Links = await this.links.find();
-      return { Links };
+      const links = await this.links.find();
+      return { links };
     } catch (error) {
       errLog(__filename, error);
     }

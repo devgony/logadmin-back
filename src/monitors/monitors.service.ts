@@ -6,7 +6,7 @@ import { errLog } from 'src/common/hooks/errLog';
 import { perfQ } from 'src/common/queries/performance';
 import { Link } from 'src/links/entities/links.entity';
 import { createConnection, Repository } from 'typeorm';
-import { MonitorPerfInput } from './dtos/monitor-test.dto';
+import { MonitorPerfInput } from './dtos/monitor-perf.dto';
 
 @Injectable()
 export class MonitorsService {

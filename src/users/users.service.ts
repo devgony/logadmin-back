@@ -15,16 +15,16 @@ export class UsersService {
   ) {}
 
   async createUser({
-    user_id,
+    username,
     password,
   }: CreateUserInput): Promise<CreateUserOutput> {
     try {
-      const exists = await this.users.findOne({ user_id });
+      const exists = await this.users.findOne({ username });
       if (exists) {
         return { ok: false, error: '계정이 이미 존재 합니다' };
       }
       const user = await this.users.save(
-        this.users.create({ user_id, password }),
+        this.users.create({ username, password }),
       );
       return { ok: true };
     } catch (error) {
@@ -33,10 +33,10 @@ export class UsersService {
     }
   }
 
-  async login({ user_id, password }: LoginInput): Promise<LoginOutput> {
+  async login({ username, password }: LoginInput): Promise<LoginOutput> {
     try {
       const user = await this.users.findOne(
-        { user_id },
+        { username },
         { select: ['id', 'password'] },
       );
       if (!user) {

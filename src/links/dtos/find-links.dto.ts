@@ -5,5 +5,5 @@ import { Link } from '../entities/links.entity';
 @ObjectType()
 export class FindLinksOutput {
   @Field((_) => [Link])
-  Links: Link[];
+  links: Link[];
 }
