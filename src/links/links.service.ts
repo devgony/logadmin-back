@@ -19,9 +19,10 @@ export class LinksService {
     name,
     host,
     port,
+    database,
+    connectString,
     username,
     password,
-    database,
   }: CreateLinkInput): Promise<CreateLinkOutput> {
     try {
       const connExists = await this.links.findOne({
@@ -43,7 +44,15 @@ export class LinksService {
         };
       }
       const Link = await this.links.save(
-        this.links.create({ name, host, port, username, password, database }),
+        this.links.create({
+          name,
+          host,
+          port,
+          database,
+          connectString,
+          username,
+          password,
+        }),
       );
       return { ok: true };
     } catch (error) {

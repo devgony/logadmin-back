@@ -24,6 +24,10 @@ export class Link extends CoreEntity {
   database: string;
 
   @Field(() => String, { nullable: false })
+  @Column({ nullable: false, length: 4000 })
+  connectString: string;
+
+  @Field(() => String, { nullable: false })
   @Column({ nullable: false })
   username: string;
 
