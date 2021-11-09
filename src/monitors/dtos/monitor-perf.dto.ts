@@ -6,6 +6,9 @@ export class MonitorPerfInput extends PickType(Link, ['name']) {}
 
 @ObjectType()
 export class MonitorPerfOuput {
+  @Field((_) => String)
+  currentTime: string;
+
   @Field((_) => Int)
   LOGICAL_READS: number;
 

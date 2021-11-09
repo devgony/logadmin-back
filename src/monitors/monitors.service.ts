@@ -5,8 +5,10 @@ import { MONITOR_PERF, PUB_SUB } from 'src/common/common.constants';
 import { errLog } from 'src/common/hooks/errLog';
 import { perfQ } from 'src/common/queries/performance';
 import { Link } from 'src/links/entities/links.entity';
-import { createConnection, Repository } from 'typeorm';
+import { createConnection, getConnectionManager, Repository } from 'typeorm';
 import { MonitorPerfInput } from './dtos/monitor-perf.dto';
+
+const TERM = 3 * 1000;
 
 @Injectable()
 export class MonitorsService {
@@ -23,11 +25,12 @@ export class MonitorsService {
     const connection = await this.openConnection({ name });
     const interval = setInterval(async () => {
       const [result] = await connection.query(query);
-      console.log(result);
+      const currentTime = new Date().toString().split(' ')[4];
+      const data = { currentTime, ...result };
       this.pubSub.publish(subscriptionName, {
-        [subscriptionName]: result,
+        [subscriptionName]: data,
       });
-    }, 3000);
+    }, TERM);
     return { interval, connection };
   }
 
@@ -39,6 +42,14 @@ export class MonitorsService {
         new Error('Could not find link');
       }
       // do sth
+      const connectionManager = getConnectionManager();
+      if (connectionManager.has(name)) {
+        const connection = connectionManager.get(name);
+        console.log('reuse');
+        return Promise.resolve(
+          connection.isConnected ? connection : connection.connect(),
+        );
+      }
       const connection = await createConnection({
         type: 'oracle',
         name,
@@ -49,6 +60,7 @@ export class MonitorsService {
         username,
         password,
       });
+      console.log('newConnection');
       return connection;
     } catch (error) {
       errLog(__filename, error);

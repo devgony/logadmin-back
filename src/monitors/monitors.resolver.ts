@@ -30,8 +30,9 @@ export class MonitorsResolver {
       perfQ,
     );
     return withCancel(this.pubSub.asyncIterator(MONITOR_PERF), () => {
+      console.log('cleared');
       clearInterval(interval);
-      connection.close();
+      // connection.close();
     });
   }
 
@@ -46,7 +47,7 @@ export class MonitorsResolver {
     );
     return withCancel(this.pubSub.asyncIterator(MONITOR_SESSIONS), () => {
       clearInterval(interval);
-      connection.close();
+      // connection.close();
     });
   }
 

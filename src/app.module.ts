@@ -12,6 +12,7 @@ import { LinksModule } from './links/links.module';
 import { Link } from './links/entities/links.entity';
 import { MonitorsModule } from './monitors/monitors.module';
 import { CommonModule } from './common/common.module';
+import { TenancyModule } from './tenancy/tenancy.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { CommonModule } from './common/common.module';
     LinksModule,
     MonitorsModule,
     CommonModule,
+    TenancyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
