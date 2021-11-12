@@ -5,7 +5,7 @@ import { Column, Entity, Unique } from 'typeorm';
 @InputType('LinkEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
 @Entity()
-@Unique(['host', 'port', 'database'])
+@Unique(['host', 'port', 'serviceName'])
 export class Link extends CoreEntity {
   @Field(() => String, { nullable: false })
   @Column({ unique: true, nullable: false })
@@ -21,11 +21,7 @@ export class Link extends CoreEntity {
 
   @Field(() => String, { nullable: false })
   @Column({ nullable: false })
-  database: string;
-
-  @Field(() => String, { nullable: false })
-  @Column({ nullable: false, length: 4000 })
-  connectString: string;
+  serviceName: string;
 
   @Field(() => String, { nullable: false })
   @Column({ nullable: false })

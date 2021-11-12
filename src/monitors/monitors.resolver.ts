@@ -7,10 +7,14 @@ import {
   PUB_SUB,
 } from 'src/common/common.constants';
 import { withCancel, withObservable } from 'src/common/hooks/with-observable';
-import { activeSessionQ, perfQ } from 'src/common/queries/performance';
+import {
+  activeSessionQ,
+  perfQ,
+  PROD_activeSessionQ,
+} from 'src/common/queries/performance';
 import {
   MonitorSessionsInput,
-  MonitorSessionsOuput,
+  MonitorSessionsOutput,
 } from './dtos/monitor-sessions.dto';
 import { MonitorPerfInput, MonitorPerfOuput } from './dtos/monitor-perf.dto';
 import { MonitorsService } from './monitors.service';
@@ -36,14 +40,15 @@ export class MonitorsResolver {
     });
   }
 
-  @Subscription((_) => MonitorSessionsOuput)
+  @Subscription((_) => MonitorSessionsOutput)
   async monitorSessions(
     @Args('input') monitorSessionsInput: MonitorSessionsInput,
   ) {
     const { interval, connection } = await this.monitorsService.startMonitor(
       'monitorSessions',
       monitorSessionsInput,
-      activeSessionQ,
+      // process.env.mode === 'prod' ? PROD_activeSessionQ : activeSessionQ,
+      PROD_activeSessionQ,
     );
     return withCancel(this.pubSub.asyncIterator(MONITOR_SESSIONS), () => {
       clearInterval(interval);

@@ -4,8 +4,9 @@ import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { createConnection, Repository } from 'typeorm';
 import { CreateLinkInput, CreateLinkOutput } from './dtos/create-link.dto';
+import { DeleteLinkInput, DeleteLinkOutput } from './dtos/delete-link.dto';
 import { FindLinksOutput } from './dtos/find-links.dto';
-import { TestLinkInput, TestLinkOuput } from './dtos/test-link';
+import { TestLinkInput, TestLinkOuput } from './dtos/test-link.dto';
 import { Link } from './entities/links.entity';
 
 @Injectable()
@@ -19,14 +20,14 @@ export class LinksService {
     name,
     host,
     port,
-    database,
-    connectString,
+    serviceName,
+    // connectString,
     username,
     password,
   }: CreateLinkInput): Promise<CreateLinkOutput> {
     try {
       const connExists = await this.links.findOne({
-        where: { host, port, database },
+        where: { host, port, serviceName },
       });
       if (connExists) {
         return {
@@ -43,13 +44,13 @@ export class LinksService {
           error: 'The name already exists',
         };
       }
+      // const connectString = `${host}${port}${database}`;
       const link = await this.links.save(
         this.links.create({
           name,
           host,
           port,
-          database,
-          connectString,
+          serviceName,
           username,
           password,
         }),
@@ -70,33 +71,53 @@ export class LinksService {
     }
   }
 
-  async testLink({ name }: TestLinkInput): Promise<TestLinkOuput> {
+  async testLink({
+    name,
+    host,
+    port,
+    username,
+    password,
+    serviceName,
+  }: TestLinkInput): Promise<TestLinkOuput> {
     try {
-      const { host, port, database, username, password } =
-        await this.links.findOne({ where: { name } });
-      if (!host) {
-        return { ok: false, error: 'Connection does not exist' };
-      }
+      // const { host, port, database, username, password } =
+      //   await this.links.findOne({ where: { name } });
+      // if (!host) {
+      //   return { ok: false, error: 'Connection does not exist' };
+      // }
       // do sth
       const connection = await createConnection({
-        type: 'postgres',
+        type: 'oracle',
         name,
         host,
         port,
         username,
         password,
-        database,
+        serviceName,
       });
       if (!connection.isConnected) {
         return { ok: false, error: 'Connection failed' };
       }
-      console.log(connection.isConnected);
-      console.log(await connection.query(`select 1`));
+      connection.close();
       // await this.getPool({ host, port, database, username, password });
       return { ok: true };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error: 'Connection failed' };
+    }
+  }
+
+  async deleteLink({ name }: DeleteLinkInput): Promise<DeleteLinkOutput> {
+    try {
+      const link = await this.links.findOne({ where: { name } });
+      if (!link) {
+        return { ok: false, error: 'The Link does not exists' };
+      }
+      this.links.delete(link.id);
+      return { ok: true };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error: 'Could not delete Link' };
     }
   }
 

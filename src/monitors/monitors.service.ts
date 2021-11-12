@@ -24,9 +24,15 @@ export class MonitorsService {
   ) {
     const connection = await this.openConnection({ name });
     const interval = setInterval(async () => {
-      const [result] = await connection.query(query);
-      const currentTime = new Date().toString().split(' ')[4];
-      const data = { currentTime, ...result };
+      const result = await connection.query(query);
+      let data;
+      if (subscriptionName === 'monitorPerf') {
+        const currentTime = new Date().toString().split(' ')[4];
+        data = { currentTime, ...result[0] };
+      } else {
+        data = { monitorSessionsRows: result };
+        // console.log(data);
+      }
       this.pubSub.publish(subscriptionName, {
         [subscriptionName]: data,
       });
@@ -36,7 +42,7 @@ export class MonitorsService {
 
   async openConnection({ name }: MonitorPerfInput) {
     try {
-      const { host, port, database, connectString, username, password } =
+      const { host, port, serviceName, username, password } =
         await this.links.findOne({ where: { name } });
       if (!host) {
         new Error('Could not find link');
@@ -53,10 +59,10 @@ export class MonitorsService {
       const connection = await createConnection({
         type: 'oracle',
         name,
-        // host,
-        // port,
-        // database,
-        connectString,
+        host,
+        port,
+        serviceName,
+        // connectString,
         username,
         password,
       });

@@ -18,3 +18,15 @@ Error: NJS-040: connection request timeout. Request exceeded queueTimeout of 600
     at processTimers (node:internal/timers:500:7)
 
 ```
+
+## env
+
+```
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+PRIVATE_KEY=
+ORACLE_HOME=
+```
